@@ -1,4 +1,4 @@
-from mendeleev import element
+#from mendeleev import element
 
 class pesquisador:
     def __init__(self, nome, cpf):
@@ -17,14 +17,10 @@ class Docente(pesquisador):
         self.grau = pesquisador.verificação(grau, ["mestrado", "doutorado", "pós", "pós doutorado"])
         
 #Só o docente vai poder acessar e alterar os fornnecedores
+        
+        
 
 
-class Tecnico(pesquisador):
-    def __init__(self, nome, cpf, especialidade):
-        super().__init__(nome, cpf)
-        self.especialidade = pesquisador.verificação(especialidade, ["cerâmicos", "metais", "polímeros"])
-        pass
-#Só o técnico será capaz de processar os materiais
 
 
 class materiais:
@@ -33,13 +29,24 @@ class materiais:
         self.__fornecedor= fornecedor
         self.estado_de_processamento = materiais.verificação(estado_de_processamento, ["processado", "não processado"])
         self.estado_fisico = materiais.verificação(estado_fisico, ["plasma", "gasoso", "líquido", "sólido", "condensado de Bose-Einstein"])
+    @property
+    def fornecedor(self):
+        return self.__fornecedor
+    @fornecedor.setter
+    def fornecedor(self,pessoa,fornecedor_novo):
+        if pessoa.__class__== Docente:
+            return fornecedor_novo
+        else:
+            return f'O {pessoa.__class__.__name__} não possui permissão para mudar o fornecedor'
         
+    
+    
     def apresentar_material(self):
         print(self.__class__.__name__)
         print(self.nome)
         print(self.estado_de_processamento)
         print(self.estado_fisico)
-  
+    
         pass
 
     def processar(self, tipo_de_material, processo, resultado):
@@ -57,15 +64,32 @@ class materiais:
         else: 
             return "opção inválida"
 
+
+class Docente(pesquisador,materiais):
+    def __init__(self, nome, cpf, grau):
+        pesquisador.__init__(self,nome, cpf)
+        self.grau = pesquisador.verificação(grau, ["mestrado", "doutorado", "pós", "pós doutorado"])
+
+    
+
+
+class Tecnico(pesquisador,materiais):
+    def __init__(self, nome, cpf, especialidade):
+        pesquisador.__init__(self,nome, cpf)
+        self.especialidade = pesquisador.verificação(especialidade, ["cerâmicos", "metais", "polímeros"])
+        pass
+
+#Só o técnico será capaz de processar os materiais
+'''
 class metal(materiais):
     def __init__ (self, nome, fornecedor, estado_de_processamento, estado_fisico, tipo_de_liga):
         super().__init__(nome, fornecedor, estado_de_processamento, estado_fisico)
         self.tipo_de_liga = materiais.verificação(tipo_de_liga, ["liga-ferrosa", "aço-carbono comum", "açoinoxidável", "liga-não-ferrosa"])
         self.composicao = metal.definir_composição(tipo_de_liga)
-
+'''
    # def verificação_de_tipo_de_liga(tipo_de_liga):
        # return 
-        
+'''
     def definir_composição(tipo_de_liga):
         carbono = element("C")
         níquel = element("Ni")
@@ -76,7 +100,7 @@ class metal(materiais):
             return [carbono, ferro]
         elif tipo_de_liga == "açoinoxidável":
             return [carbono, ferro, níquel]
-        
+    
         
     def forjar(self, molde):
         materiais.processabilidade (self, ["líquido", "sólido"])
@@ -156,7 +180,8 @@ class ceramico(materiais):
         else:
             condição_da_peça = "Peça em boas condições"
         return materiais.processar(self, __class__.__name__, "sinterização", molde) , condição_da_peça
-    
+'''    
+'''
 aço = metal("aço 12000", "Guerdau", "não processado", "sólido", "açoinoxidável")
 print(aço.apresentar_material())
 print(aço.forjar("picareta"))
@@ -169,3 +194,6 @@ print(PET.impressão_3D("troféu da Semana Metalmat"))
 
 CdT = ceramico("Carboneto de Tugstênio", "Greystonealloys", "não processado", "sólido", "arenoso", "avançada", 280, 200)
 print(CdT.sinterização("vaso", 250))
+'''
+pessoa01 = Docente('Mary Silvia',13728049786,'doutorado')
+materiais.fornecedor()
